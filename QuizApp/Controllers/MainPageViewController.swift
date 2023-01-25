@@ -13,6 +13,7 @@ class MainPageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBlue
+//        tabBarController?.tabBar.isHidden = false
         initialize()
     }
     

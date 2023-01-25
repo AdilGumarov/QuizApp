@@ -8,11 +8,13 @@
 import Foundation
 
 struct Question {
-    let question: String
-    let answer: String
+    let flag: String
+    let name: String
+    let capital: String
     
-    init(flag: String, country: String) {
-        question = flag
-        answer = country 
+    init(flag: String, country: String, capital: String) {
+        self.flag = flag
+        name = country
+        self.capital = capital
     }
 }
