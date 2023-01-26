@@ -11,6 +11,7 @@ import SnapKit
 class GameEndViewController: UIViewController {
     
     var score = 0
+    var textCongrat = ""
     
     init(_ score: Int) {
         super.init(nibName: nil, bundle: nil)
@@ -24,7 +25,7 @@ class GameEndViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemIndigo
-        navigationController?.navigationItem.setHidesBackButton(true, animated: true)
+        self.navigationItem.setHidesBackButton(true, animated:true);
         initialize()
     }
     
@@ -44,7 +45,7 @@ class GameEndViewController: UIViewController {
         
         let congratsLabel: UILabel = {
             let label = UILabel()
-            label.text = "Congratulations"
+            label.text = textCongrat
             label.textColor = .white
             label.font = UIFont.systemFont(ofSize: 30, weight: .bold)
             return label

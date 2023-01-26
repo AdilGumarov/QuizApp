@@ -21,16 +21,31 @@ class FlagsModeViewController: UIViewController {
     
     let timerProgressBar = UIProgressView()
     var timer = Timer()
-    var totalTime = 10
+    var totalTime = 15
     var secondPassed = 0
     
     var quizBrain = QuizBrain()
     
     override func viewDidLoad() { 
         super.viewDidLoad()
+        
         view.backgroundColor = .systemTeal
+        self.navigationItem.setHidesBackButton(true, animated: true)
+        
         initialize()
+        quizBrain.newGameStarted()
         updateUI()
+    }
+    
+    func setButtonParameters(_ button: UIButton) {
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 30)
+        button.layer.borderWidth = 2.0
+        button.layer.cornerRadius = 8
+        button.titleLabel?.numberOfLines = 0
+        button.titleLabel?.adjustsFontSizeToFitWidth = true
+        button.titleLabel?.lineBreakMode = .byWordWrapping
+        button.setTitle("Option A", for: .normal)
+        button.addTarget(self, action: #selector(answerButtonPressed), for: .touchUpInside)
     }
     
     func initialize() {
@@ -73,7 +88,6 @@ class FlagsModeViewController: UIViewController {
         timerProgressBar.progressTintColor = .systemYellow
         timerProgressBar.trackTintColor = .systemGreen
         timerProgressBar.layer.borderWidth = 1.0
-//        timerProgressBar.layer.cornerRadius = 8
         topView.addSubview(timerProgressBar)
         timerProgressBar.snp.makeConstraints { make in
             make.top.equalTo(flagLabel.snp.bottom)
@@ -87,7 +101,6 @@ class FlagsModeViewController: UIViewController {
         let variantStackView: UIStackView = {
             let sv = UIStackView()
             sv.axis = .vertical
-//            sv.backgroundColor = .systemTeal
             sv.alignment = .fill
             sv.distribution = .fillEqually
             sv.spacing = 30
@@ -100,41 +113,36 @@ class FlagsModeViewController: UIViewController {
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
         }
         
-        firstButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 30)
-        firstButton.layer.borderWidth = 2.0
-        firstButton.layer.cornerRadius = 8
-        firstButton.setTitle("Option A", for: .normal)
-        firstButton.addTarget(self, action: #selector(answerButtonPressed), for: .touchUpInside)
-        
-        secondButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 30)
-        secondButton.layer.borderWidth = 2.0
-        secondButton.layer.cornerRadius = 8
-        secondButton.setTitle("Option A", for: .normal)
-        secondButton.addTarget(self, action: #selector(answerButtonPressed), for: .touchUpInside)
-        
-        thirdButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 30)
-        thirdButton.layer.borderWidth = 2.0
-        thirdButton.layer.cornerRadius = 8
-        thirdButton.setTitle("Option A", for: .normal)
-        thirdButton.addTarget(self, action: #selector(answerButtonPressed), for: .touchUpInside)
-        
-        fourthButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 30)
-        fourthButton.layer.borderWidth = 2.0
-        fourthButton.layer.cornerRadius = 8
-        fourthButton.setTitle("Option A", for: .normal)
-        fourthButton.addTarget(self, action: #selector(answerButtonPressed), for: .touchUpInside)
-        
-    
-        
         [firstButton, secondButton, thirdButton, fourthButton] . forEach { button in
+            setButtonParameters(button)
             variantStackView.addArrangedSubview(button)
         }
     }
     
+    func showGameOverVC(message: String) {
+        let endGameVC = GameEndViewController(quizBrain.getScore())
+        navigationController?.pushViewController(endGameVC, animated: true)
+        print("Game over")
+        endGameVC.textCongrat = message
+    }
+    
     @objc func getFiftyFiftyAnswer() {
+        let correctAnswer = quizBrain.getCorrectAnswer()
         var buttons = [firstButton, secondButton, thirdButton, fourthButton]
         buttons.shuffle()
-//        fiftyFiftyButton.isHidden = true
+        
+        var counter = 0
+        for button in buttons {
+            if button.currentTitle != correctAnswer {
+                button.titleLabel?.textColor = .clear
+                button.isUserInteractionEnabled = false
+                counter += 1
+            }
+            if counter == 2 {
+                break
+            }
+        }
+        fiftyFiftyButton.isHidden = true
         print("Function test")
     }
     
@@ -162,7 +170,9 @@ class FlagsModeViewController: UIViewController {
             timerProgressBar.progress = Float(secondPassed) / Float(totalTime)
         } else {
             timer.invalidate()
-            print("Уакыт битти 667")
+            if quizBrain.hasNextQuestion {
+                showGameOverVC(message: "Game Over")
+            }
         }
     }
     
@@ -186,13 +196,12 @@ class FlagsModeViewController: UIViewController {
             
             [firstButton, secondButton, thirdButton, fourthButton] . forEach { button in
                 button.backgroundColor = UIColor.clear
+                button.isUserInteractionEnabled = true
                 button.isHidden = false
             }
             print(variants)
         } else {
-            let endGameVC = GameEndViewController(quizBrain.getScore())
-            navigationController?.pushViewController(endGameVC, animated: true)
-            print("Game over")
+            showGameOverVC(message: "Congratulations")
         }
         
         
