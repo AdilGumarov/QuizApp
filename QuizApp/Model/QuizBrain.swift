@@ -186,17 +186,85 @@ struct QuizBrain {
         Question(flag: "🇸🇻", country: "Сальвадора", capital: "Сан-Сальвадор"),
         Question(flag: "🇼🇸", country: "Самоа", capital: "Апиа"),
         Question(flag: "🇸🇲", country: "Сан-Марино", capital: "Сан-Марино"),
-        Question(flag: "🇸🇹", country: "Сан-Томе и Принсипи", capital: "Сан-Томе")
-        
+        Question(flag: "🇸🇹", country: "Сан-Томе и Принсипи", capital: "Сан-Томе"),
+        Question(flag: "🇸🇦", country: "Саудовской Аравии", capital: "Эр-Рияд"),
+        Question(flag: "🇲🇰", country: "Северной Македонии", capital: "Северной Македонии"),
+        Question(flag: "🇲🇵", country: "Северных Марианских островов", capital: "Сайпан"),
+        Question(flag: "🇸🇨", country: "Сейшельских островов", capital: "Виктория"),
+        Question(flag: "🇧🇱", country: "Сен-Бартелеми", capital: "Густавия"),
+        Question(flag: "🇵🇲", country: "Сен-Пьера и Микелона", capital: "Сен-Пьер"),
+        Question(flag: "🇸🇳", country: "Сенегала", capital: "Дакар"),
+        Question(flag: "🇻🇨", country: "Сент-Винсента и Гренадин", capital: "Кингстаун"),
+        Question(flag: "🇰🇳", country: "Сент-Китса и Невиса", capital: "Бастер"),
+        Question(flag: "🇱🇨", country: "Сент-Люсии", capital: "Кастри"),
+        Question(flag: "🇷🇸", country: "Сербии", capital: "Белград"),
+        Question(flag: "🇸🇬", country: "Сингапура", capital: "Сингапур"),
+        Question(flag: "🇸🇽", country: "Синт-Мартена", capital: "Филипсбург"),
+        Question(flag: "🇸🇾", country: "Сирии", capital: "Дамаск"),
+        Question(flag: "🇸🇰", country: "Словакии", capital: "Братислава"),
+        Question(flag: "🇸🇮", country: "Словении", capital: "Любляна"),
+        Question(flag: "🇺🇸", country: "США", capital: "Вашингтон"),
+        Question(flag: "🇸🇧", country: "Соломоновых островов", capital: "Хониара"),
+        Question(flag: "🇸🇴", country: "Сомали", capital: "Могадишо"),
+        Question(flag: "🇸🇩", country: "Судана", capital: "Хартум"),
+        Question(flag: "🇸🇷", country: "Суринама", capital: "Парамарибо"),
+        Question(flag: "🇸🇱", country: "Сьерра-Леоне", capital: "Фритаун"),
+        Question(flag: "🇹🇯", country: "Таджикистана", capital: "Душанбе"),
+        Question(flag: "🇹🇭", country: "Таиланда", capital: "Бангкок"),
+        Question(flag: "🇹🇼", country: "Тайваня", capital: "Тайбэй"),
+        Question(flag: "🇹🇿", country: "Танзании", capital: "Додома"),
+        Question(flag: "🇹🇬", country: "Того", capital: "Ломе"),
+        Question(flag: "🇹🇰", country: "Токелау", capital: "Нукунону"),
+        Question(flag: "🇹🇴", country: "Тонга", capital: "Нукуалофа"),
+        Question(flag: "🇹🇹", country: "Тринидада и Тобаго", capital: "Порт-оф-Спейн"),
+        Question(flag: "🇹🇻", country: "Тувалу", capital: "Фунафути"),
+        Question(flag: "🇹🇳", country: "Туниса", capital: "Тунис"),
+        Question(flag: "🇹🇲", country: "Туркменистана", capital: "Ашхабад"),
+        Question(flag: "🇹🇷", country: "Турции", capital: "Анкара"),
+        Question(flag: "🇺🇬", country: "Уганды", capital: "Кампала"),
+        Question(flag: "🇺🇿", country: "Узбекистана", capital: "Ташкент"),
+        Question(flag: "🇺🇦", country: "Украины", capital: "Киев"),
+        Question(flag: "🇼🇫", country: "Уоллиса и Футуны", capital: "Мата-Уту"),
+        Question(flag: "🇺🇾", country: "Уругвая", capital: "Монтевидео"),
+        Question(flag: "🇫🇴", country: "Фарерских островов", capital: "Торсхавн"),
+        Question(flag: "🇫🇯", country: "Фиджи", capital: "Сува"),
+        Question(flag: "🇵🇭", country: "Филиппин", capital: "Манила"),
+        Question(flag: "🇫🇮", country: "Финляндии", capital: "Хельсинки"),
+        Question(flag: "🇫🇰", country: "Фолклендских островов", capital: "Порт-Стэнли"),
+        Question(flag: "🇫🇷", country: "Франции", capital: "Париж"),
+        Question(flag: "🇬🇫", country: "Французской Гвианы", capital: "Кайенна"),
+        Question(flag: "🇵🇫", country: "Французской Полинезии", capital: "Папеэте"),
+        Question(flag: "🇹🇫", country: "Французских Южных Территорий", capital: "Сен-Пьер"),
+        Question(flag: "🇭🇷", country: "Хорватии", capital: "Загреб"),
+        Question(flag: "🇨🇫", country: "Центральноафриканской Республики", capital: "Банги"),
+        Question(flag: "🇹🇩", country: "Чада", capital: "Нджамена"),
+        Question(flag: "🇲🇪", country: "Черногории", capital: "Подгорица"),
+        Question(flag: "🇨🇿", country: "Чехии", capital: "Прага"),
+        Question(flag: "🇨🇱", country: "Чили", capital: "Сантьяго"),
+        Question(flag: "🇨🇭", country: "Швейцарии", capital: "Берн"),
+        Question(flag: "🇸🇪", country: "Швеции", capital: "Стокгольм"),
+        Question(flag: "🇱🇰", country: "Шри-Ланки", capital: "Шри-Джаяварденепура-Котте"),
+        Question(flag: "🇪🇨", country: "Эквадора", capital: "Кито"),
+        Question(flag: "🇬🇶", country: "Экваториальной Гвинеи", capital: "Малабо"),
+        Question(flag: "🇪🇷", country: "Эритреи", capital: "Асмара"),
+        Question(flag: "🇸🇿", country: "Эсватини", capital: "Мбабане и Лобамба"),
+        Question(flag: "🇪🇪", country: "Эстонии", capital: "Таллин"),
+        Question(flag: "🇪🇹", country: "Эфиопии", capital: "Аддис-Абеба"),
+        Question(flag: "🇬🇸", country: "Южной Георгии и Южных Сандвичевых островов", capital: "Кинг Эдуард Пойнт"),
+        Question(flag: "🇿🇦", country: "ЮАР", capital: "Кейптаун, Претория, Блумфонтейн"),
+        Question(flag: "🇸🇸", country: "Южного Судана", capital: "Джуба"),
+        Question(flag: "🇯🇲", country: "Ямайки", capital: "Кингстон"),
+        Question(flag: "🇯🇵", country: "Японии", capital: "Токио")
     ]
     
     var questionNumber = 0
     var score = 0
     var totalLevels = 0
-    var currentFlagName = ""
+    
     var quizDuplicate = [Question]()
-    var hasNextQuestion = true
     var result = [String]()
+    
+    var hasNextQuestion = true
     var correctAnswer = ""
     
     mutating func updateValues() -> [String] {
@@ -214,6 +282,24 @@ struct QuizBrain {
         result.shuffle()
         result.insert(quizDuplicate[0].flag, at: 0)
         
+        
+        return result
+    }
+    
+    mutating func updateValuesForCapitalMode() -> [String] {
+        result.removeAll()
+        quizDuplicate.remove(at: 0)
+        
+        let random4 = Int.getUniqueRandomNumbers(min: 1, max: quizDuplicate.count-1, count: 3)
+        correctAnswer = "\(quizDuplicate[0].name) \(quizDuplicate[0].flag)"
+        result.append(correctAnswer)
+        
+        for i in 0..<3 {
+            let variant = "\(quizDuplicate[random4[i]].name) \(quizDuplicate[random4[i]].flag)"
+            result.append(variant)
+        }
+        result.shuffle()
+        result.insert(quizDuplicate[0].capital, at: 0)
         
         return result
     }

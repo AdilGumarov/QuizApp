@@ -51,7 +51,6 @@ class FlagsModeViewController: UIViewController {
     func initialize() {
         
         let topView = UIView()
-        topView.backgroundColor = .systemTeal
         view.addSubview(topView)
         topView.snp.makeConstraints { make in
             make.leading.trailing.top.equalToSuperview()
@@ -69,13 +68,11 @@ class FlagsModeViewController: UIViewController {
         }
         
         flagLabel.font = UIFont.systemFont(ofSize: 200)
-        flagLabel.text = "🇩🇿"
         topView.addSubview(flagLabel)
         flagLabel.snp.makeConstraints { make in
             make.center.equalToSuperview()
         }
         
-        levelLabel.text = "1/140"
         levelLabel.textColor = .white
         levelLabel.font = UIFont.systemFont(ofSize: 20)
         topView.addSubview(levelLabel)
@@ -90,7 +87,7 @@ class FlagsModeViewController: UIViewController {
         timerProgressBar.layer.borderWidth = 1.0
         topView.addSubview(timerProgressBar)
         timerProgressBar.snp.makeConstraints { make in
-            make.top.equalTo(flagLabel.snp.bottom)
+            make.top.equalTo(topView.snp.bottom).inset(40)
             make.leading.trailing.equalToSuperview().inset(40)
             make.height.equalTo(10)
         }

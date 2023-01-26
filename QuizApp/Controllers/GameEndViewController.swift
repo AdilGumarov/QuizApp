@@ -24,7 +24,7 @@ class GameEndViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemIndigo
+        view.backgroundColor = .systemMint
         self.navigationItem.setHidesBackButton(true, animated:true);
         initialize()
     }

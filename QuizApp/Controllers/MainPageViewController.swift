@@ -25,6 +25,9 @@ class MainPageViewController: UIViewController {
     }
     
     @objc func capitalsButtonTapped() {
+        let capitalVC = CapitalCityModeViewController()
+        capitalVC.modalPresentationStyle = .fullScreen
+        navigationController?.pushViewController(capitalVC, animated: true)
         print("capitalsButtonTapped")
     }
     
