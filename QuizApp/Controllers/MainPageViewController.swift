@@ -32,6 +32,9 @@ class MainPageViewController: UIViewController {
     }
     
     @objc func shuffleButtonTapped() {
+        let shuffleVC = ShuffleModeViewController()
+        shuffleVC.modalPresentationStyle = .fullScreen
+        navigationController?.pushViewController(shuffleVC, animated: true)
         print("capitalsButtonTapped")
     }
     
