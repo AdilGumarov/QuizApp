@@ -17,25 +17,19 @@ class MainPageViewController: UIViewController {
         initialize()
     }
     
-    @objc func flagsButtonTapped() {
-        let flagVC = FlagsModeViewController()
-        flagVC.modalPresentationStyle = .fullScreen
-        navigationController?.pushViewController(flagVC, animated: true)
-        print("flagsButtonTapped")
+    @objc func modeButtonTapped(_ button: UIButton) {
+        guard let mode = button.currentTitle else {return}
+        let gameVC = GameViewController(mode)
+        gameVC.modalPresentationStyle = .fullScreen
+        navigationController?.pushViewController(gameVC, animated: true)
     }
     
-    @objc func capitalsButtonTapped() {
-        let capitalVC = CapitalCityModeViewController()
-        capitalVC.modalPresentationStyle = .fullScreen
-        navigationController?.pushViewController(capitalVC, animated: true)
-        print("capitalsButtonTapped")
-    }
-    
-    @objc func shuffleButtonTapped() {
-        let shuffleVC = ShuffleModeViewController()
-        shuffleVC.modalPresentationStyle = .fullScreen
-        navigationController?.pushViewController(shuffleVC, animated: true)
-        print("capitalsButtonTapped")
+    func setDefaultButtonSettings(_ button: UIButton) {
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 30)
+        button.setTitleColor(.white, for: .normal)
+        button.addTarget(self, action: #selector(modeButtonTapped), for: .touchUpInside)
+        button.layer.borderWidth = 2.0
+        button.layer.cornerRadius = 12
     }
     
     func initialize() {
@@ -60,42 +54,36 @@ class MainPageViewController: UIViewController {
         
         let flagsButton: UIButton = {
             let button = UIButton()
-            button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 30)
             button.setTitle("Flags", for: .normal)
-            button.setTitleColor(.orange, for: .normal)
-            button.addTarget(self, action: #selector(flagsButtonTapped), for: .touchUpInside)
-            button.layer.borderWidth = 2.0
-            button.layer.cornerRadius = 12
             return button
         }()
         
         let capitalsButton: UIButton = {
             let button = UIButton()
-            button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 30)
             button.setTitle("Capitals", for: .normal)
-            button.addTarget(self, action: #selector(capitalsButtonTapped), for: .touchUpInside)
-            button.layer.borderWidth = 2.0
-            button.layer.cornerRadius = 12
             return button
         }()
         
         let shuffleButton: UIButton = {
             let button = UIButton()
-            button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 30)
             button.setTitle("Shuffle", for: .normal)
-            button.addTarget(self, action: #selector(shuffleButtonTapped), for: .touchUpInside)
-            button.layer.borderWidth = 2.0
-            button.layer.cornerRadius = 12
             return button
         }()
         
-        view.addSubview(titleLabel)
-        view.addSubview(verticalStackView)
-        
-        [flagsButton, capitalsButton, shuffleButton] . forEach { i in
-            verticalStackView.addArrangedSubview(i)
+        [flagsButton, capitalsButton, shuffleButton].forEach { button in
+            setDefaultButtonSettings(button)
+            verticalStackView.addArrangedSubview(button)
         }
         
+        let adilLabel: UILabel = {
+            let label = UILabel()
+            label.text = "game created by Adil Gumarov  "
+            label.textColor = .white
+            label.font = UIFont.systemFont(ofSize: 12)
+            return label
+        }()
+        
+        view.addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalToSuperview().inset(200)
@@ -103,13 +91,18 @@ class MainPageViewController: UIViewController {
             make.width.equalTo(200)
         }
         
+        view.addSubview(verticalStackView)
         verticalStackView.snp.makeConstraints { make in
             make.left.right.equalToSuperview().inset(60)
             make.top.equalTo(titleLabel.snp.bottom).offset(50)
             make.bottom.equalToSuperview().multipliedBy(0.8)
         }
+        
+        view.addSubview(adilLabel)
+        adilLabel.snp.makeConstraints { make in
+            make.top.equalTo(verticalStackView.snp.bottom).offset(60)
+            make.trailing.equalToSuperview()
+        }
     }
-
-
 }
 

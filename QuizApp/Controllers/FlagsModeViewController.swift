@@ -179,7 +179,7 @@ class FlagsModeViewController: UIViewController {
             timer.invalidate()
             timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
             
-            let variants = quizBrain.updateValues()
+            let variants = quizBrain.updateValuesForFlagMode()
             
             flagLabel.text = variants[0]
             

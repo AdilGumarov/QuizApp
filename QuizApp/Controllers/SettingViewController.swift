@@ -10,10 +10,19 @@ import UIKit
 
 class SettingViewController: UIViewController {
     
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .purple
+        view.backgroundColor = .white
         title = "Setting"
+        
+        initialize()
+    }
+    
+    func initialize() {
+        
+        
     }
     
 }

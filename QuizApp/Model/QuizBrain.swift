@@ -267,18 +267,18 @@ struct QuizBrain {
     var hasNextQuestion = true
     var correctAnswer = ""
     
-    mutating func updateValues() -> [String] {
+    mutating func updateValuesForFlagMode() -> [String] {
         result.removeAll()
         quizDuplicate.remove(at: 0)
-        
+
         let random4 = Int.getUniqueRandomNumbers(min: 1, max: quizDuplicate.count-1, count: 3)
         correctAnswer = quizDuplicate[0].name
-        
+
         result.append(quizDuplicate[0].name)
         result.append(quizDuplicate[random4[0]].name)
         result.append(quizDuplicate[random4[1]].name)
         result.append(quizDuplicate[random4[2]].name)
-        
+
         result.shuffle()
         result.insert(quizDuplicate[0].flag, at: 0)
         
@@ -289,7 +289,7 @@ struct QuizBrain {
     mutating func updateValuesForCapitalMode() -> [String] {
         result.removeAll()
         quizDuplicate.remove(at: 0)
-        
+//
         let random4 = Int.getUniqueRandomNumbers(min: 1, max: quizDuplicate.count-1, count: 3)
         correctAnswer = "\(quizDuplicate[0].name) \(quizDuplicate[0].flag)"
         result.append(correctAnswer)
@@ -300,6 +300,83 @@ struct QuizBrain {
         }
         result.shuffle()
         result.insert(quizDuplicate[0].capital, at: 0)
+        
+        return result
+    }
+    
+    mutating func updateValueForShuffleMode() -> [String] {
+        let randomNumber = Int.getUniqueRandomNumbers(min: 1, max: 2, count: 1)
+        switch randomNumber[0] {
+        case 1:
+            return updateValuesForFlagMode()
+        case 2:
+            return updateValuesForCapitalMode()
+        default:
+            print("haha")
+        }
+        return [""]
+    }
+    
+    mutating func updateValue(_ mode: String) -> [String] {
+        result.removeAll()
+        quizDuplicate.remove(at: 0)
+        
+        let random4 = Int.getUniqueRandomNumbers(min: 1, max: quizDuplicate.count-1, count: 3)
+        
+        switch mode {
+        case "flag":
+            correctAnswer = quizDuplicate[0].name
+            
+            result.append(quizDuplicate[0].name)
+            result.append(quizDuplicate[random4[0]].name)
+            result.append(quizDuplicate[random4[1]].name)
+            result.append(quizDuplicate[random4[2]].name)
+            
+            result.shuffle()
+            result.insert(quizDuplicate[0].flag, at: 0)
+            
+        case "capital":
+            correctAnswer = "\(quizDuplicate[0].name) \(quizDuplicate[0].flag)"
+            result.append(correctAnswer)
+            
+            for i in 0..<3 {
+                let variant = "\(quizDuplicate[random4[i]].name) \(quizDuplicate[random4[i]].flag)"
+                result.append(variant)
+            }
+            
+            result.shuffle()
+            result.insert(quizDuplicate[0].capital, at: 0)
+            
+        case "shuffle":
+            let randomNumber = Int.getUniqueRandomNumbers(min: 1, max: 2, count: 1)
+            switch randomNumber[0] {
+            case 1:
+                correctAnswer = quizDuplicate[0].name
+                
+                result.append(quizDuplicate[0].name)
+                result.append(quizDuplicate[random4[0]].name)
+                result.append(quizDuplicate[random4[1]].name)
+                result.append(quizDuplicate[random4[2]].name)
+                
+                result.shuffle()
+                result.insert(quizDuplicate[0].flag, at: 0)
+            case 2:
+                correctAnswer = "\(quizDuplicate[0].name) \(quizDuplicate[0].flag)"
+                result.append(correctAnswer)
+                
+                for i in 0..<3 {
+                    let variant = "\(quizDuplicate[random4[i]].name) \(quizDuplicate[random4[i]].flag)"
+                    result.append(variant)
+                }
+                
+                result.shuffle()
+                result.insert(quizDuplicate[0].capital, at: 0)
+            default:
+                print("haha")
+            }
+        default:
+            print("Error")
+        }
         
         return result
     }

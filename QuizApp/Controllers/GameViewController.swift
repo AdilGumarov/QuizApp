@@ -1,16 +1,22 @@
 //
-//  CapitalCityModeViewController.swift
+//  GameViewController.swift
 //  QuizApp
 //
-//  Created by Adil Gumarov on 21.01.2023.
+//  Created by Adil Gumarov on 28.01.2023.
 //
 
 import UIKit
 import SnapKit
 
-class CapitalCityModeViewController: UIViewController {
+//enum GameType {
+//    case flag
+//    case capital
+//    case shuffle
+//}
+
+class GameViewController: UIViewController {
     
-    let capitalLabel = UILabel()
+    let questionLabel = UILabel()
     let levelLabel = UILabel()
     let fiftyFiftyButton = UIButton()
     
@@ -26,10 +32,21 @@ class CapitalCityModeViewController: UIViewController {
     
     var quizBrain = QuizBrain()
     
+    var mode = ""
+    
+    init(_ mode: String) {
+        super.init(nibName: nil, bundle: nil)
+        self.mode = mode
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .systemIndigo
+        view.backgroundColor = .systemTeal
         self.navigationItem.setHidesBackButton(true, animated: true)
         
         initialize()
@@ -37,7 +54,19 @@ class CapitalCityModeViewController: UIViewController {
         updateUI()
     }
     
+    func setButtonParameters(_ button: UIButton) {
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 30)
+        button.layer.borderWidth = 2.0
+        button.layer.cornerRadius = 8
+        button.titleLabel?.numberOfLines = 0
+        button.titleLabel?.adjustsFontSizeToFitWidth = true
+        button.titleLabel?.lineBreakMode = .byWordWrapping
+        button.setTitle("Option A", for: .normal)
+        button.addTarget(self, action: #selector(answerButtonPressed), for: .touchUpInside)
+    }
+    
     func initialize() {
+        
         let topView = UIView()
         view.addSubview(topView)
         topView.snp.makeConstraints { make in
@@ -55,16 +84,14 @@ class CapitalCityModeViewController: UIViewController {
             make.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing).inset(30)
         }
         
-        capitalLabel.font = UIFont.systemFont(ofSize: 45)
-        capitalLabel.text = "Astana"
-        capitalLabel.textAlignment = .center
-        capitalLabel.textColor = .white
-        capitalLabel.numberOfLines = 0
-        capitalLabel.adjustsFontSizeToFitWidth = true
-        capitalLabel.lineBreakMode = .byWordWrapping
-
-        topView.addSubview(capitalLabel)
-        capitalLabel.snp.makeConstraints { make in
+        questionLabel.font = UIFont.systemFont(ofSize: 200)
+        questionLabel.textAlignment = .center
+        questionLabel.textColor = .white
+        questionLabel.numberOfLines = 0
+        questionLabel.adjustsFontSizeToFitWidth = true
+        questionLabel.lineBreakMode = .byWordWrapping
+        topView.addSubview(questionLabel)
+        questionLabel.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.centerY.equalToSuperview()
         }
@@ -89,7 +116,7 @@ class CapitalCityModeViewController: UIViewController {
         }
         
         
-//        ========================
+    //        ========================
         
         let variantStackView: UIStackView = {
             let sv = UIStackView()
@@ -110,17 +137,6 @@ class CapitalCityModeViewController: UIViewController {
             setButtonParameters(button)
             variantStackView.addArrangedSubview(button)
         }
-    }
-    
-    func setButtonParameters(_ button: UIButton) {
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 30)
-        button.layer.borderWidth = 2.0
-        button.layer.cornerRadius = 8
-        button.titleLabel?.numberOfLines = 0
-        button.titleLabel?.adjustsFontSizeToFitWidth = true
-        button.titleLabel?.lineBreakMode = .byWordWrapping
-        button.setTitle("Option A", for: .normal)
-        button.addTarget(self, action: #selector(answerButtonPressed), for: .touchUpInside)
     }
     
     func showGameOverVC(message: String) {
@@ -147,7 +163,6 @@ class CapitalCityModeViewController: UIViewController {
             }
         }
         fiftyFiftyButton.isHidden = true
-        print("Function test")
     }
     
     @objc func answerButtonPressed(_ sender: UIButton) {
@@ -168,15 +183,52 @@ class CapitalCityModeViewController: UIViewController {
         Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(updateUI), userInfo: nil, repeats: false)
     }
     
+    @objc func updateTimer() {
+        if secondPassed < totalTime {
+            secondPassed += 1
+            timerProgressBar.progress = Float(secondPassed) / Float(totalTime)
+        } else {
+            timer.invalidate()
+            if quizBrain.hasNextQuestion {
+                showGameOverVC(message: "Game Over")
+            }
+        }
+    }
+    
     @objc func updateUI() {
         
         if quizBrain.hasNextQuestion {
             timer.invalidate()
             timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
             
-            let variants = quizBrain.updateValuesForCapitalMode()
-            
-            capitalLabel.text = variants[0]
+            var variants = [String]()
+            if mode == "Flags" {
+                
+                variants = quizBrain.updateValuesForFlagMode()
+                questionLabel.font = UIFont.systemFont(ofSize: 200)
+                
+            } else if mode == "Capitals" {
+                
+                variants = quizBrain.updateValuesForCapitalMode()
+                questionLabel.font = UIFont.systemFont(ofSize: 45)
+                
+            } else if mode == "Shuffle" {
+                
+                let randomNumber = Int.getUniqueRandomNumbers(min: 1, max: 2, count: 1)
+                
+                switch randomNumber[0] {
+                case 1:
+                    variants = quizBrain.updateValuesForFlagMode()
+                    questionLabel.font = UIFont.systemFont(ofSize: 200)
+                case 2:
+                    variants = quizBrain.updateValuesForCapitalMode()
+                    questionLabel.font = UIFont.systemFont(ofSize: 45)
+                default:
+                    print("haha")
+                }
+            }
+
+            questionLabel.text = variants[0]
             
             firstButton.setTitle(variants[1], for: .normal)
             secondButton.setTitle(variants[2], for: .normal)
@@ -194,18 +246,6 @@ class CapitalCityModeViewController: UIViewController {
             print(variants)
         } else {
             showGameOverVC(message: "Congratulations")
-        }
-    }
-    
-    @objc func updateTimer() {
-        if secondPassed < totalTime {
-            secondPassed += 1
-            timerProgressBar.progress = Float(secondPassed) / Float(totalTime)
-        } else {
-            timer.invalidate()
-            if quizBrain.hasNextQuestion {
-                showGameOverVC(message: "Game Over")
-            }
         }
     }
 }

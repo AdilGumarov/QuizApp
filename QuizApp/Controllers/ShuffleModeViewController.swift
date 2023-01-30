@@ -188,7 +188,7 @@ class ShuffleModeViewController: UIViewController {
             let randomNumber = Int.getUniqueRandomNumbers(min: 1, max: 2, count: 1)
             switch randomNumber[0] {
             case 1:
-                variants = quizBrain.updateValues()
+                variants = quizBrain.updateValuesForFlagMode()
                 shuffleLabel.font = UIFont.systemFont(ofSize: 200)
             case 2:
                 variants = quizBrain.updateValuesForCapitalMode()
