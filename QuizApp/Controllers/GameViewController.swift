@@ -32,6 +32,7 @@ class GameViewController: UIViewController {
     
     var quizBrain = QuizBrain()
     
+    var userName = ""
     var mode = ""
     
     init(_ mode: String) {
@@ -49,9 +50,34 @@ class GameViewController: UIViewController {
         view.backgroundColor = .systemTeal
         self.navigationItem.setHidesBackButton(true, animated: true)
         
-        initialize()
-        quizBrain.newGameStarted()
-        updateUI()
+        
+        showAlertWithTextField(mode)
+//        quizBrain.newGameStarted()
+//        updateUI()
+    }
+    
+    func showAlertWithTextField(_ mode: String) {
+        let alertController = UIAlertController(title: "Write your name", message: nil, preferredStyle: .alert)
+        let confirmAction = UIAlertAction(title: "Add", style: .default) { (_) in
+            if let txtField = alertController.textFields?.first, let text = txtField.text {
+                //some operations
+                self.initialize()
+                self.userName = text
+                self.quizBrain.newGameStarted()
+                self.updateUI()
+//                print("Text==>" + text)
+            }
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (_) in
+            
+            self.navigationController?.popToRootViewController(animated: true)
+        }
+        alertController.addTextField { (textField) in
+            textField.placeholder = "Хасбулла"
+        }
+        alertController.addAction(confirmAction)
+        alertController.addAction(cancelAction)
+        self.present(alertController, animated: true, completion: nil)
     }
     
     func setButtonParameters(_ button: UIButton) {
@@ -245,6 +271,9 @@ class GameViewController: UIViewController {
             }
             print(variants)
         } else {
+            // Inserting data to core data
+            quizBrain.insertUserData(name: userName, score: quizBrain.getScore(), mode: mode)
+            print("Name: \(userName)  Score: \(quizBrain.getScore())  Mode: \(mode)")
             showGameOverVC(message: "Congratulations")
         }
     }

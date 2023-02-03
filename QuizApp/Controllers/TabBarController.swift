@@ -14,14 +14,14 @@ class TabBarController: UITabBarController {
         super.viewDidLoad()
         
         let menuVC = MainPageViewController() // UINavigationController(rootViewController: MainPageViewController())
-        let settingVC = UINavigationController(rootViewController: SettingViewController())
+        let settingVC = UINavigationController(rootViewController: SettingViewController()) //SettingViewController() 
         
         menuVC.title = "Home"
-        settingVC.title = "Settings"
+        settingVC.title = "Ranking"
         
         setViewControllers([menuVC, settingVC], animated: false)
         
-        let images = ["house", "gear"]
+        let images = ["house", "trophy"]
         guard let items = tabBar.items else { return }
         
         for i in 0..<items.count {

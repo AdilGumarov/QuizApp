@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import UIKit
+import CoreData
 
 struct QuizBrain {
     var quiz = [
@@ -267,6 +269,10 @@ struct QuizBrain {
     var hasNextQuestion = true
     var correctAnswer = ""
     
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    
+    var userData = [User]()
+    
     mutating func updateValuesForFlagMode() -> [String] {
         result.removeAll()
         quizDuplicate.remove(at: 0)
@@ -317,70 +323,6 @@ struct QuizBrain {
         return [""]
     }
     
-    mutating func updateValue(_ mode: String) -> [String] {
-        result.removeAll()
-        quizDuplicate.remove(at: 0)
-        
-        let random4 = Int.getUniqueRandomNumbers(min: 1, max: quizDuplicate.count-1, count: 3)
-        
-        switch mode {
-        case "flag":
-            correctAnswer = quizDuplicate[0].name
-            
-            result.append(quizDuplicate[0].name)
-            result.append(quizDuplicate[random4[0]].name)
-            result.append(quizDuplicate[random4[1]].name)
-            result.append(quizDuplicate[random4[2]].name)
-            
-            result.shuffle()
-            result.insert(quizDuplicate[0].flag, at: 0)
-            
-        case "capital":
-            correctAnswer = "\(quizDuplicate[0].name) \(quizDuplicate[0].flag)"
-            result.append(correctAnswer)
-            
-            for i in 0..<3 {
-                let variant = "\(quizDuplicate[random4[i]].name) \(quizDuplicate[random4[i]].flag)"
-                result.append(variant)
-            }
-            
-            result.shuffle()
-            result.insert(quizDuplicate[0].capital, at: 0)
-            
-        case "shuffle":
-            let randomNumber = Int.getUniqueRandomNumbers(min: 1, max: 2, count: 1)
-            switch randomNumber[0] {
-            case 1:
-                correctAnswer = quizDuplicate[0].name
-                
-                result.append(quizDuplicate[0].name)
-                result.append(quizDuplicate[random4[0]].name)
-                result.append(quizDuplicate[random4[1]].name)
-                result.append(quizDuplicate[random4[2]].name)
-                
-                result.shuffle()
-                result.insert(quizDuplicate[0].flag, at: 0)
-            case 2:
-                correctAnswer = "\(quizDuplicate[0].name) \(quizDuplicate[0].flag)"
-                result.append(correctAnswer)
-                
-                for i in 0..<3 {
-                    let variant = "\(quizDuplicate[random4[i]].name) \(quizDuplicate[random4[i]].flag)"
-                    result.append(variant)
-                }
-                
-                result.shuffle()
-                result.insert(quizDuplicate[0].capital, at: 0)
-            default:
-                print("haha")
-            }
-        default:
-            print("Error")
-        }
-        
-        return result
-    }
-    
     func getCorrectAnswer() -> String {
         return correctAnswer
     }
@@ -423,6 +365,68 @@ struct QuizBrain {
     func getScore() -> Int {
         return score
     }
+    
+    
+    
+    //MARK: - Core Data functions
+    
+    func insertUserData(name: String, score: Int, mode: String) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let context = appDelegate.persistentContainer.viewContext
+        let entity = NSEntityDescription.entity(forEntityName: "User", in: context)!
+        let user = NSManagedObject(entity: entity, insertInto: context)
+        
+        user.setValue(name, forKey: "name")
+        user.setValue(score, forKey: "score")
+        user.setValue(mode, forKey: "mode")
+        
+        if context.hasChanges {
+            do {
+                try context.save()
+            } catch {
+                context.rollback()
+                let nserror = error as NSError
+                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+            }
+        }
+    }
+    
+    mutating func getDataFromCoreData() {
+        userData.removeAll()
+        let fetchRequest: NSFetchRequest<User> = User.fetchRequest()
+        if let objects = try? appDelegate.persistentContainer.viewContext.fetch(fetchRequest) {
+            userData = objects
+        }
+    }
+    
+    func removeUser(at row: Int) {
+        let context = appDelegate.persistentContainer.viewContext
+        context.delete(userData[row])
+        do {
+            try context.save()
+        } catch {
+            context.rollback()
+            let nserror = error as NSError
+            fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+        }
+    }
+    
+    func getNumberOfUsers() -> Int {
+        userData.count
+    }
+    
+    func getName(at row: Int) -> String {
+        userData[row].name!
+    }
+    
+    func getScore(at row: Int) -> Int32 {
+        userData[row].score
+    }
+    
+    func getMode(at row: Int) -> String {
+        userData[row].mode!
+    }
+    
 }
 
 extension Int {
