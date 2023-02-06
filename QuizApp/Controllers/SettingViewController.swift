@@ -5,20 +5,29 @@
 //  Created by Adil Gumarov on 18.01.2023.
 //
 
-import Foundation
 import UIKit
+import SnapKit
 
 class SettingViewController: UIViewController {
     
     let tableView = UITableView()
     
-    var quizBrain = QuizBrain()
+    let quizBrain = QuizBrain()
     
-    let segmentedControl: UISegmentedControl =  {
+    var listToShow = [User]()
+    
+    let segmentedControl: UISegmentedControl = {
         let sc = UISegmentedControl(items: ["Flag", "Capital", "Shuffle"])
         sc.selectedSegmentIndex = 0
         return sc
     }()
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        handleSegmentChange()
+        
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,22 +37,32 @@ class SettingViewController: UIViewController {
         navigationItem.titleView?.tintColor = .black
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(barButtonTapped))
         
+        segmentedControl.addTarget(self, action: #selector(handleSegmentChange), for: .valueChanged)
+        
         initialize()
         addObservers()
         quizBrain.getDataFromCoreData()
+    }
+    
+    @objc func handleSegmentChange() {
+        print(segmentedControl.selectedSegmentIndex)
+        listToShow.removeAll()
+        
+        switch segmentedControl.selectedSegmentIndex {
+        case 0:
+            listToShow = quizBrain.getAllFlagUsers()
+        case 1:
+            listToShow = quizBrain.getAllCapitalUsers()
+        default:
+            listToShow = quizBrain.getAllShuffleUsers()
+        }
+        tableView.reloadData()
     }
     
     @objc func barButtonTapped() {
         
     }
     
-    func addObservers() {
-        NotificationCenter.default.addObserver(forName: .NSManagedObjectContextObjectsDidChange, object: nil, queue: nil) { [weak self] _ in
-            print("Core data changed")
-            self?.quizBrain.getDataFromCoreData()
-            self?.tableView.reloadData()
-        }
-    }
     
     func initialize() {
         
@@ -63,20 +82,27 @@ class SettingViewController: UIViewController {
             make.top.equalTo(segmentedControl.snp.bottom).offset(10)
             make.leading.trailing.bottom.equalToSuperview()
         }
-        
+    }
+    
+    func addObservers() {
+        NotificationCenter.default.addObserver(forName: .NSManagedObjectContextObjectsDidChange, object: nil, queue: nil) { [weak self] _ in
+            print("Core data changed")
+            self?.quizBrain.getDataFromCoreData()
+            self?.tableView.reloadData()
+        }
     }
 }
 
 extension SettingViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        quizBrain.getNumberOfUsers()
+        return quizBrain.getNumberOfUsers()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! SettingTableViewCell
         
-        cell.userNameLabel.text = quizBrain.getName(at: indexPath.row)
-        cell.scoreLabel.text = String(quizBrain.getScore(at: indexPath.row))
+        cell.userNameLabel.text = quizBrain.getName(at: indexPath.row) //listToShow[indexPath.row].name //
+        cell.scoreLabel.text = String(quizBrain.getScore(at: indexPath.row)) //String(listToShow[indexPath.row].score) //
         
         return cell
     }
@@ -86,8 +112,6 @@ extension SettingViewController: UITableViewDataSource {
 extension SettingViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
-        
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -98,7 +122,7 @@ extension SettingViewController: UITableViewDelegate {
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { (action, view, complectionHandler) in
             
             self.quizBrain.removeUser(at: indexPath.row)
-//             self.tableView.deleteRows(at: [indexPath], with: .automatic)
+             self.tableView.deleteRows(at: [indexPath], with: .automatic)
             
             complectionHandler(true)
         }

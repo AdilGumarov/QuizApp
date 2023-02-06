@@ -65,7 +65,6 @@ class GameViewController: UIViewController {
                 self.userName = text
                 self.quizBrain.newGameStarted()
                 self.updateUI()
-//                print("Text==>" + text)
             }
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (_) in
@@ -168,7 +167,6 @@ class GameViewController: UIViewController {
     func showGameOverVC(message: String) {
         let endGameVC = GameEndViewController(quizBrain.getScore())
         navigationController?.pushViewController(endGameVC, animated: true)
-        print("Game over")
         endGameVC.textCongrat = message
     }
     
@@ -202,7 +200,11 @@ class GameViewController: UIViewController {
             sender.backgroundColor = UIColor.red
         }
         
-        print(userAnswer)
+//        print(userAnswer)
+        
+        [firstButton, secondButton, thirdButton, fourthButton] . forEach { button in
+            button.isUserInteractionEnabled = false
+        }
         
         quizBrain.nextQuestion()
         
@@ -269,11 +271,11 @@ class GameViewController: UIViewController {
                 button.isUserInteractionEnabled = true
                 button.isHidden = false
             }
-            print(variants)
+//            print(variants)
         } else {
             // Inserting data to core data
+            print("Game ended")
             quizBrain.insertUserData(name: userName, score: quizBrain.getScore(), mode: mode)
-            print("Name: \(userName)  Score: \(quizBrain.getScore())  Mode: \(mode)")
             showGameOverVC(message: "Congratulations")
         }
     }

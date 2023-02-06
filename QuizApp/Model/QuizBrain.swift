@@ -9,7 +9,8 @@ import Foundation
 import UIKit
 import CoreData
 
-struct QuizBrain {
+class QuizBrain {
+    
     var quiz = [
         Question(flag: "🇦🇺", country: "Австралии", capital: "Канберра"),
         Question(flag: "🇦🇹", country: "Австрии", capital: "Вена"),
@@ -100,7 +101,6 @@ struct QuizBrain {
         Question(flag: "🇰🇭", country: "Камбоджи", capital: "Пном Пен"),
         Question(flag: "🇨🇲", country: "Камеруна", capital: "Яунде"),
         Question(flag: "🇨🇦", country: "Канады", capital: "Оттава"),
-        Question(flag: "🇮🇨", country: "Канарских островов", capital: "Санта-Крус-де-Тенерифе и Лас-Пальмас-де-Гран-Канария"),
         Question(flag: "🇶🇦", country: "Катара", capital: "Доха"),
         Question(flag: "🇰🇪", country: "Кении", capital: "Найроби"),
         Question(flag: "🇨🇾", country: "Кипра", capital: "Никосия"),
@@ -172,7 +172,7 @@ struct QuizBrain {
         Question(flag: "🇨🇰", country: "Островов Кука", capital: "Аваруа"),
         Question(flag: "🇵🇰", country: "Пакистана", capital: "Исламабад"),
         Question(flag: "🇵🇼", country: "Палау", capital: "Нгерулмуд"),
-        Question(flag: "🇵🇸", country: "Палестинских территорий", capital: "Рамалла Иерусалим или Восточный Иерусалим"),
+        Question(flag: "🇵🇸", country: "Палестинских территорий", capital: "Рамалла Иерусалим"),
         Question(flag: "🇵🇦", country: "Панамы", capital: "Панама-Сити"),
         Question(flag: "🇵🇬", country: "Папуа — Новой Гвинеи", capital: "Порт-Морсби"),
         Question(flag: "🇵🇾", country: "Парагвая", capital: "Асунсьон"),
@@ -252,7 +252,6 @@ struct QuizBrain {
         Question(flag: "🇸🇿", country: "Эсватини", capital: "Мбабане и Лобамба"),
         Question(flag: "🇪🇪", country: "Эстонии", capital: "Таллин"),
         Question(flag: "🇪🇹", country: "Эфиопии", capital: "Аддис-Абеба"),
-        Question(flag: "🇬🇸", country: "Южной Георгии и Южных Сандвичевых островов", capital: "Кинг Эдуард Пойнт"),
         Question(flag: "🇿🇦", country: "ЮАР", capital: "Кейптаун, Претория, Блумфонтейн"),
         Question(flag: "🇸🇸", country: "Южного Судана", capital: "Джуба"),
         Question(flag: "🇯🇲", country: "Ямайки", capital: "Кингстон"),
@@ -272,8 +271,9 @@ struct QuizBrain {
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
     var userData = [User]()
+    private var changeableList = [User]()
     
-    mutating func updateValuesForFlagMode() -> [String] {
+    func updateValuesForFlagMode() -> [String] {
         result.removeAll()
         quizDuplicate.remove(at: 0)
 
@@ -292,7 +292,7 @@ struct QuizBrain {
         return result
     }
     
-    mutating func updateValuesForCapitalMode() -> [String] {
+    func updateValuesForCapitalMode() -> [String] {
         result.removeAll()
         quizDuplicate.remove(at: 0)
 //
@@ -310,7 +310,7 @@ struct QuizBrain {
         return result
     }
     
-    mutating func updateValueForShuffleMode() -> [String] {
+    func updateValueForShuffleMode() -> [String] {
         let randomNumber = Int.getUniqueRandomNumbers(min: 1, max: 2, count: 1)
         switch randomNumber[0] {
         case 1:
@@ -327,7 +327,7 @@ struct QuizBrain {
         return correctAnswer
     }
     
-    mutating func newGameStarted() {
+    func newGameStarted() {
         self.questionNumber = 0
         self.score = 0
         quiz.shuffle()
@@ -335,7 +335,7 @@ struct QuizBrain {
         
     }
     
-    mutating func checkAnswer(_ userAnswer: String ) -> Bool {
+    func checkAnswer(_ userAnswer: String ) -> Bool {
         if userAnswer == correctAnswer {
             score += 1
             return true
@@ -344,7 +344,7 @@ struct QuizBrain {
         }
     }
     
-    mutating func nextQuestion() {
+    func nextQuestion() {
         if questionNumber + 1 < 20 {
             questionNumber += 1
             hasNextQuestion = true
@@ -371,6 +371,7 @@ struct QuizBrain {
     //MARK: - Core Data functions
     
     func insertUserData(name: String, score: Int, mode: String) {
+        
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let context = appDelegate.persistentContainer.viewContext
         let entity = NSEntityDescription.entity(forEntityName: "User", in: context)!
@@ -391,7 +392,7 @@ struct QuizBrain {
         }
     }
     
-    mutating func getDataFromCoreData() {
+    func getDataFromCoreData() {
         userData.removeAll()
         let fetchRequest: NSFetchRequest<User> = User.fetchRequest()
         if let objects = try? appDelegate.persistentContainer.viewContext.fetch(fetchRequest) {
@@ -412,19 +413,51 @@ struct QuizBrain {
     }
     
     func getNumberOfUsers() -> Int {
-        userData.count
+        changeableList.count
     }
     
     func getName(at row: Int) -> String {
-        userData[row].name!
+        changeableList[row].name ?? ""
     }
     
-    func getScore(at row: Int) -> Int32 {
-        userData[row].score
+    func getScore(at row: Int) -> Int64 {
+        changeableList[row].score
     }
     
     func getMode(at row: Int) -> String {
         userData[row].mode!
+    }
+    
+    func getAllFlagUsers() -> [User] {
+        changeableList.removeAll()
+        userData.forEach { user in
+            if user.mode == "Flags" {
+                changeableList.append(user)
+            }
+        }
+        return changeableList.sorted { u1, u2 in
+            u1.score > u2.score
+        }
+    }
+    
+    func getAllCapitalUsers() -> [User] {
+        changeableList.removeAll()
+        userData.forEach { user in
+            if user.mode == "Capitals" {
+                changeableList.append(user)
+            }
+        }
+        return changeableList
+    }
+    
+    func getAllShuffleUsers() -> [User] {
+        changeableList.removeAll()
+        userData.forEach { user in
+            if user.mode == "Shuffle" {
+                changeableList.append(user)
+            }
+        }
+        return changeableList
     }
     
 }

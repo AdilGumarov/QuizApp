@@ -12,7 +12,6 @@ class TabBarController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         let menuVC = MainPageViewController() // UINavigationController(rootViewController: MainPageViewController())
         let settingVC = UINavigationController(rootViewController: SettingViewController()) //SettingViewController() 
         
@@ -21,7 +20,7 @@ class TabBarController: UITabBarController {
         
         setViewControllers([menuVC, settingVC], animated: false)
         
-        let images = ["house", "trophy"]
+        let images = ["house", "trophy.fill"]
         guard let items = tabBar.items else { return }
         
         for i in 0..<items.count {
